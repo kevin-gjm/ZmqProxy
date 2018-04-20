@@ -7,7 +7,6 @@
 #include <vector>
 #include <thread>
 #include <functional>
-#include "client_info.h"
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <glog/logging.h>
 

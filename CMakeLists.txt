@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-project(Proxy)
+project(ZmqProxy)
 
 
 if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
@@ -13,14 +13,6 @@ Remove the CMakeCache.txt file and try again from another folder, e.g.:
    cmake ..
 ")
 endif ()
-
-set(C_BUILD_FLAGS "-Wall -std=gnu99")
-
-set(CMAKE_C_FLAGS "${C_BUILD_FLAGS} ${CMAKE_C_FLAGS}")
-set(CMAKE_C_FLAGS_DEBUG "${C_BUILD_FLAGS} ${CMAKE_C_FLAGS_DEBUG}")
-set(CMAKE_C_FLAGS_MINSIZEREL "${C_BUILD_FLAGS} ${CMAKE_C_FLAGS_MINSIZEREL}")
-set(CMAKE_C_FLAGS_RELEASE "${C_BUILD_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO "${C_BUILD_FLAGS} ${CMAKE_C_FLAGS_RELWITHDEBINFO}")
 
 
 set(CXX_FLAGS
@@ -67,7 +59,6 @@ set(SRC_FILES
 src/main.cc
 src/zmq_server.h
 src/zmq_server.cc
-src/client_info.h
 src/ini.c
 src/ini.h
 src/zmq.hpp
