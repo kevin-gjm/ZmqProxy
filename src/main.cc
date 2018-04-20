@@ -12,8 +12,6 @@ extern "C" {
 
 using namespace std;
 
-int g_front_port;
-int g_back_port;
 zmq::context_t *g_pContext;
 
 
@@ -37,9 +35,10 @@ int main()
 
 
 
+    int front_port,back_port;
 
-    if (!ini_sget(config, "ProxyServer", "front_port", "%d", &g_front_port))return -1;
-    if (!ini_sget(config, "ProxyServer", "back_port", "%d", &g_back_port))return -1;
+    if (!ini_sget(config, "ProxyServer", "front_port", "%d", &front_port))return -1;
+    if (!ini_sget(config, "ProxyServer", "back_port", "%d", &back_port))return -1;
 
 
     ini_free(config);
@@ -48,7 +47,7 @@ int main()
     g_pContext = &ctx;
 
     srand((int)time(0));
-    Server oServer(&ctx,9999,9998);
+    Server oServer(&ctx,front_port,back_port);
     oServer.Start();
 
 
