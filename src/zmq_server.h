@@ -10,7 +10,6 @@
 #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <glog/logging.h>
 
-#define IO_THREAD_COUNT 4
 
 using std::string;
 

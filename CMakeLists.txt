@@ -53,7 +53,6 @@ ENDIF ()
 
 
 include_directories(./src)
-include_directories(./Smart_Park_Public_Include)
 
 set(SRC_FILES
 src/main.cc
@@ -70,6 +69,6 @@ add_executable(${PROJECT_NAME} ${SRC_FILES})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}  
 glog
 zmq
-${MYSQL_LIBRARIES}
+pthread
 )
 

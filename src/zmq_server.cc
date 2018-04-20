@@ -70,11 +70,13 @@ void Server::Start()
                 string sData((char*)data.data(),data.size());
                 if(sData==HEARTBEAT_KEY)
                 {
+                    LOG(INFO)<<"get worker heartbeat";
                     MakeNewWorker(identity);
                 }
             }
             else
             {
+                LOG(INFO)<<"Send backend info to user via frontend";
                 msg.send(*front_sock_);
             }
         }
@@ -86,6 +88,7 @@ void Server::Start()
             if(ret != 0)
             {
                 //no worker
+                LOG(INFO)<<"not have woker!";
                 string error="not have woker!";
                 zmq::multipart_t error_msg;
                 error_msg.add(msg.pop());
@@ -95,6 +98,7 @@ void Server::Start()
             }
             else
             {
+                LOG(INFO)<<"Add worker identity and send to worker via backend";
                 msg.pushmem(worker_id.data(),worker_id.size());
                 msg.send(*back_sock_);
             }
@@ -112,6 +116,7 @@ void Server::Start()
                 heartbeat_msg.send(*back_sock_);
             }
             heartbeat_at = s_clock () + HEARTBEAT_INTERVAL;
+            LOG(INFO)<<"send heartbeat to all worker";
         }
         // remove expiry worker
         CheckWorker();
@@ -130,11 +135,13 @@ void Server::MakeNewWorker(zmq::message_t& identity)
             LOG(INFO) << "Duplicate worker identity,Update expiry!" ;
             found = true;
             it->expiry= s_clock() + HEARTBEAT_INTERVAL * HEARTBEAT_LIVENESS;
+            LOG(INFO)<<"Update Worker Expiry";
             break;
         }
     }
     if (!found)
     {
+        LOG(INFO)<<"Add New Worker";
         worker new_worker;
         new_worker.identity->copy(&identity);
         new_worker.expiry = s_clock() + HEARTBEAT_INTERVAL * HEARTBEAT_LIVENESS;
@@ -162,6 +169,7 @@ void Server::CheckWorker()
             itor = vec_work_.erase(itor)-1;
         }
     }
+    LOG(INFO)<<"Remove expiry worker";
 }
 
 
