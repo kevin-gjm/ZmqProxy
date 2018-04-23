@@ -38,7 +38,7 @@ public:
         std::string frontendpoint =std::string("tcp://")+ip_+":"+std::to_string(front_port_);
         std::string backendpoint =std::string("tcp://")+ip_+":"+std::to_string(back_port_);
         front_sock_->bind(frontendpoint);
-        back_sock_->bind(frontendpoint);
+        back_sock_->bind(backendpoint);
 		int timeout = 3000;
         front_sock_->setsockopt(ZMQ_SNDTIMEO, &timeout, sizeof(timeout));
         back_sock_->setsockopt(ZMQ_SNDTIMEO, &timeout, sizeof(timeout));

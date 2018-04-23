@@ -2,17 +2,14 @@
 #include <zmq.h>
 #include <vector>
 #include <exception>
-
-#if (!defined (WIN32))
 #include <sys/time.h>
-#endif
 
 
 
 #define HEARTBEAT_LIVENESS  3               //  3-5 is reasonable
-#define HEARTBEAT_INTERVAL  1000            //  msecs
+#define HEARTBEAT_INTERVAL  1000               //  sec
 #define HEARTBEAT_KEY       "HEARTBEAT"
-#define ZMQ_POLL_MSEC       1000            //  usec
+#define ZMQ_POLL_MSEC       1000            //
 
 
 using namespace  std;
@@ -20,15 +17,9 @@ using namespace zmq;
 static int64_t
 s_clock (void)
 {
-#if (defined (WIN32))
-    SYSTEMTIME st;
-    GetSystemTime (&st);
-    return (int64_t) st.wSecond * 1000 + st.wMilliseconds;
-#else
     struct timeval tv;
-    gettimeofday (&tv, NULL);
-    return (int64_t) (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-#endif
+    gettimeofday(&tv,NULL);
+    return  tv.tv_sec*1000;
 }
 
 
@@ -51,7 +42,7 @@ void Server::Start()
 
     while(running_)
     {
-        rc = zmq::poll(pollitems,vec_work_.size()? 2: 1,HEARTBEAT_INTERVAL * ZMQ_POLL_MSEC);
+        rc = zmq::poll(pollitems,vec_work_.size()? 2: 1,HEARTBEAT_INTERVAL);
         if (rc == -1)
         {
             LOG(ERROR)<<"Get Poll error.exit;";
@@ -106,7 +97,8 @@ void Server::Start()
         }
 
         //send heartbeat to make sure the worker is online
-        if(s_clock() > heartbeat_at)
+        int64_t time = s_clock();
+        if(time > heartbeat_at)
         {
             for (auto& itor:vec_work_)
             {
@@ -143,7 +135,7 @@ void Server::MakeNewWorker(zmq::message_t& identity)
     {
         LOG(INFO)<<"Add New Worker";
         worker new_worker;
-        new_worker.identity->copy(&identity);
+        new_worker.identity = make_shared<message_t>(identity.data(),identity.size());
         new_worker.expiry = s_clock() + HEARTBEAT_INTERVAL * HEARTBEAT_LIVENESS;
         vec_work_.push_back(new_worker);
     }
