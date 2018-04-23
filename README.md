@@ -5,6 +5,9 @@
 相应的Woker参考地址
 https://github.com/kevin-gjm/ZmqWorker.git
 
+若需要一个多线程的Zmq服务器可以参考 
+https://github.com/kevin-gjm/ZmqMultiServer.git
+
 ### 备注
 - 使用C++11
 - 依赖库:glog zmq 
